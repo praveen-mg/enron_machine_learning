@@ -1,0 +1,58 @@
+---
+title: "EnronAnalysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+
+```{r}
+library(ggplot2)
+
+```
+```{r}
+enron <- wine <- read.csv('E:/NanoDegreeDataAnalyst/git-repo/Udacity/final_project/data.csv',header = TRUE)
+head(enron)
+max_bonus <- max(enron$bonus)
+summary(enron$bonus)
+data_bonus_no_outlier <- subset(enron,bonus != 97340000)
+val <- summary(enron$bonus)
+names(enron)
+ggplot(aes(x = salary,y = bonus),data =   subset(enron,!is.na(bonus) & bonus < 97340000 ))+
+  geom_jitter(aes(color = poi))
+
+ggplot(aes(x = salary,y = total_stock_value),data =   subset(enron,!is.na(total_stock_value) & bonus < 97340000 ))+
+  geom_jitter(aes(color = poi))
+
+ggplot(aes(x = salary,y = restricted_stock),data =   subset(enron,!is.na(restricted_stock) & bonus < 97340000 ))+
+  geom_jitter(aes(color = poi))+
+  xlim(c(0,0.5e+6))+
+  ylim(c(0,2.0e+6))+
+  geom_smooth(method = "lm")
+
+```
+
+
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
