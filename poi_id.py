@@ -32,7 +32,7 @@ def float_to_int(val):
 def convert_dict(data_frame):
     
     #temp_df = data_frame.astype(int,errors='coerce')
-    print data_frame.head()
+    #print data_frame.head()
     temp_df = data_frame
     #for col in temp_df.columns.values:
         #print col
@@ -42,10 +42,11 @@ def convert_dict(data_frame):
     
     #temp_df = data_frame.apply(float_to_int)
     #temp_df = temp_df.applymap(float_to_int)
-    print "\n\n\nTEMP DF"
-    print temp_df.head()
-    temp_df = data_frame.fillna('NaN')
-    temp_df = data_frame.transpose()
+    #print "\n\n\nTEMP DF"
+    #print temp_df.head()
+    print "Shape of DF called",data_frame.shape
+    temp_df = temp_df.fillna('NaN')
+    temp_df = temp_df.transpose()
     dataset = temp_df.to_dict()
 #    for key in dataset:
 #        for key1,val in dataset[key].iteritems():
@@ -84,11 +85,11 @@ if __name__ == "__main__":
     
     person_data = person_data.apply(pd.to_numeric, errors='coerce')
     person_data['email_address'] = person_data['email_address'].astype(str)
-    print "Data type of data frame", person_data.dtypes
-    print "Nan data in column\n",person_data.isnull().sum()
+    #print "Data type of data frame", person_data.dtypes
+    #print "Nan data in column\n",person_data.isnull().sum()
     poi_count = person_data['poi'].loc[person_data['poi'] == True].count()
-    print "Number of POI",person_data['poi'].loc[person_data['poi'] == True].count()
-    print "Number of non POI", (person_data.shape[0] - poi_count)
+    #print "Number of POI",person_data['poi'].loc[person_data['poi'] == True].count()
+    #print "Number of non POI", (person_data.shape[0] - poi_count)
     print person_data.columns.values
 
         
@@ -117,16 +118,18 @@ if __name__ == "__main__":
           
     max_bonus = person_data['bonus'].max()
     data = featureFormat(data_dict, features)
-    print "Maximum bonus",max_bonus
+    #print "Maximum bonus",max_bonus
     name_outlier = person_data[person_data['bonus'] == max_bonus].index.tolist()[0]
-    print "Person With Max bonus:",name_outlier
-    print "Details of the person with max bonus", data_dict[name_outlier]
-    print "Total rows:",len(data_dict)
+    #print "Person With Max bonus:",name_outlier
+    #print "Details of the person with max bonus", data_dict[name_outlier]
+    #print "Total rows:",len(data_dict)
     #my_dataset = removekey(data_dict,name_outlier)
     data_dict  = removekey(data_dict,name_outlier)
     my_dataset = data_dict
-    person_data = person_data[person_data['bonus'] < max_bonus]
-    my_dataset1 = convert_dict(person_data)
+    #print "Rows Before removal",person_data.shape
+    person_data = person_data[person_data['bonus'] != max_bonus]
+    #print "Rows Before Call",person_data.shape
+    my_dataset = convert_dict(person_data)
     #print "Return Value:%d"%  cmp (my_dataset, my_dataset1)
     matplotlib.pyplot.scatter( person_data['salary'], person_data['bonus'],c=person_data['poi'])
     matplotlib.pyplot.xlabel("salary")
@@ -137,14 +140,14 @@ if __name__ == "__main__":
     #Check For other Outliers
     
     other_outlier = person_data[(person_data['bonus'] > 5000000) & (person_data['salary'] > 1000000)]
-    print other_outlier
-    print "my dataset:",len(my_dataset)
-    print "my dataset1:",len(my_dataset1)
-    for key in my_dataset:
-        if key in my_dataset1:
-            continue
-        else:
-            print "Key is miss",key
+    #print other_outlier
+#    print "my dataset:",len(my_dataset)
+#    print "my dataset1:",len(my_dataset1)
+#    for key in my_dataset:
+#        if key in my_dataset1:
+#            continue
+#        else:
+#            print "Key is miss",key
 #        for key1 in my_dataset[key]:
 #            if my_dataset[key][key1] == my_dataset1[key][key1]:
 #                continue
@@ -168,14 +171,30 @@ if __name__ == "__main__":
     ### Task 3: Create new feature(s)
     ### Store to my_dataset for easy export below.
    
+    person_data['to_ratio'] = person_data['from_poi_to_this_person'] /person_data['to_messages']
+    person_data['from_ratio'] = person_data['from_this_person_to_poi']/person_data['from_messages']
+    my_dataset = convert_dict(person_data)
+    print "my dataset:",len(my_dataset)
+    #features_list = []
+    features_list.append('to_ratio')
+    features_list.append('from_ratio')
+    features_list.append('deferral_payments')
+    features_list.append('deferred_income')
+    features_list.append('expenses')
+    #features_list.append('restricted_stock_deferred')    
     
+ 
+     
     
+    print features_list
     
+    #Plot Ratio of from and to messages
     
-    
-    
-
-    
+    matplotlib.pyplot.scatter( person_data['to_ratio'], person_data['from_ratio'],c=person_data['poi'])
+    matplotlib.pyplot.xlabel("To Ratio")
+    matplotlib.pyplot.ylabel("From Ratio")
+    matplotlib.pyplot.title("Relative Values Plot")
+    matplotlib.pyplot.show() 
     
     
     ### Extract features and labels from dataset for local testing
@@ -189,8 +208,9 @@ if __name__ == "__main__":
     ### http://scikit-learn.org/stable/modules/pipeline.html
     
     # Provided to give you a starting point. Try a variety of classifiers.
-    from sklearn.naive_bayes import GaussianNB
-    clf = GaussianNB()
+    #from sklearn.naive_bayes import GaussianNB
+    from sklearn import tree
+    clf = tree.DecisionTreeClassifier(min_samples_split = 4)
     
     ### Task 5: Tune your classifier to achieve better than .3 precision and recall 
     ### using our testing script. Check the tester.py script in the final project
