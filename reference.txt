@@ -1,0 +1,4 @@
+http://stackoverflow.com/questions/10317885/decision-tree-vs-naive-bayes-classifier
+http://trevorstephens.com/kaggle-titanic-tutorial/r-part-3-decision-trees/
+https://en.wikipedia.org/wiki/Precision_and_recall
+http://trevorstephens.com/kaggle-titanic-tutorial/r-part-4-feature-engineering/
