@@ -1,3 +1,3 @@
-Identify person of Interest in Enron Data using Machine Learning Algorithm
+# Identify person of Interest in Enron Data using Machine Learning Algorithm
 
 Enron was an American energy company which went bankrupt after scandal broke in 2001. In this project I have analyzed Enron dataset and applied decision tree machine learning algorithm to identify person who have involved in this scandal. Furthermore I have applied accuracy, precision and recall to validate the predictive model. I have compared the performance of decision tree with Naïve bayes and tuned the parameters of decision tree to avoid high bias and high variance
